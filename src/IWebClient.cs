@@ -4,7 +4,7 @@
 using System.Collections.Specialized;
 using System.Net;
 
-namespace LastPass
+namespace SkuVault.LastPass
 {
     public interface IWebClient
     {

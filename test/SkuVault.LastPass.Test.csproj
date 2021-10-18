@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1D0CC419-F25C-4F12-87D8-1DC825E15973}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>LastPass.Test</RootNamespace>
-    <AssemblyName>LastPass.Test</AssemblyName>
+    <RootNamespace>SkuVault.LastPass.Test</RootNamespace>
+    <AssemblyName>SkuVault.LastPass.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -65,9 +65,9 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\LastPass.csproj">
+    <ProjectReference Include="..\src\SkuVault.LastPass.csproj">
       <Project>{A52C86A3-E29F-416B-AD55-50E0F8EF7831}</Project>
-      <Name>LastPass</Name>
+      <Name>SkuVault.LastPass</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

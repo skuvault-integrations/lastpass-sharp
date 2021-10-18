@@ -4,7 +4,7 @@
 using System;
 using NUnit.Framework;
 
-namespace LastPass.Test
+namespace SkuVault.LastPass.Test
 {
     [TestFixture]
     class Asn1Test

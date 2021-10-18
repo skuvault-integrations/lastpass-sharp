@@ -3,7 +3,7 @@
 
 using NUnit.Framework;
 
-namespace LastPass.Test
+namespace SkuVault.LastPass.Test
 {
     [TestFixture]
     class BlobTest

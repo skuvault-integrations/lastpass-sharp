@@ -1,7 +1,7 @@
 // Copyright (C) 2013 Dmitry Yakimenko (detunized@gmail.com).
 // Licensed under the terms of the MIT license. See LICENCE for details.
 
-namespace LastPass
+namespace SkuVault.LastPass
 {
     // TODO: Rename Group to Path since it reflects the actual meaning better.
     public class Account
