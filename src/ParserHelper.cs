@@ -362,7 +362,31 @@ namespace SkuVault.LastPass
             }
         }
 
-        private static readonly HashSet<string> AllowedSecureNoteTypes = new HashSet<string>
+		internal static string Encode64( byte [] data )
+		{
+			return Convert.ToBase64String( data );
+		}
+
+		internal static byte [] EncryptAes256( string data, byte [] encryptionKey )
+		{
+			return EncryptAes256( data.ToBytes(), encryptionKey );
+		}
+
+		private static byte [] EncryptAes256( byte [] data, byte [] encryptionKey )
+		{
+			using ( var aes = new AesManaged { KeySize = 256, Key = encryptionKey, Mode = CipherMode.ECB } )
+			using ( var encryptor = aes.CreateEncryptor() )
+			using ( var encryptedStream = new MemoryStream() )
+			using ( var cryptoStream = new CryptoStream( encryptedStream, encryptor, CryptoStreamMode.Write ) )
+			{
+				cryptoStream.Write( data, 0, data.Length );
+				cryptoStream.FlushFinalBlock();
+
+				return encryptedStream.ToArray();
+			}
+		}
+
+		private static readonly HashSet<string> AllowedSecureNoteTypes = new HashSet<string>
         {
             "Server",
             "Email Account",

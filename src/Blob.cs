@@ -17,6 +17,11 @@ namespace SkuVault.LastPass
             return FetcherHelper.MakeKey(username, password, KeyIterationCount);
         }
 
+	  public static byte[] MakeEncryptionKey(string username, string password, int keyIterationCount)
+        {
+            return FetcherHelper.MakeKey(username, password, keyIterationCount);
+        }
+
         public byte[] Bytes { get; private set; }
         public int KeyIterationCount { get; private set; }
         public string EncryptedPrivateKey { get; private set; }

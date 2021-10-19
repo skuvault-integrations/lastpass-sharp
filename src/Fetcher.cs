@@ -8,6 +8,7 @@ using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Linq;
 
 namespace SkuVault.LastPass
 {
@@ -400,7 +401,113 @@ namespace SkuVault.LastPass
             webClient.Headers.Add("Cookie", string.Format("PHPSESSID={0}", Uri.EscapeDataString(session.Id)));
         }
 
-        private static readonly Dictionary<Platform, string> PlatformToUserAgent = new Dictionary<Platform, string>
+		internal static Account AddAccount(Session session, byte[] encryptionKey, Account account)
+		{
+			using (var webClient = new WebClient())
+			{ 
+				var blobResult = AddAccount(session, webClient, encryptionKey, account);
+				//TODO GUARD-2190 Convert blobResult to account and then return
+				return account;
+			}
+		}
+
+		//TODO GUARD-2190 Failing now
+		private static Blob AddAccount(Session session, IWebClient webClient, byte[] encryptionKey, Account account )
+		{
+			byte[] response;
+			try
+			{
+				SetSessionCookies(webClient, session);				
+				var parameters = new NameValueCollection
+				{
+					{"extjs", "1"},
+					{"token", session.Token},
+					{"method", "cli"},
+					{"name", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Name, encryptionKey))},	//TODO-2190 Perhaps create an AccountWithEncrypted : Account
+																				//	and populate these in the constructor? Same for the 3 places below
+					{"grouping", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Group, encryptionKey))},
+					{"pwprotect", "off"},	//Require master password to view: "on" / "off",
+
+					{"ajax", "1"},
+					{"cmd", "updatelpaa"},
+					{"appname", account.Name},
+					//{"appaid", account.Id},
+					//{"aid", account.Id},
+					{"url", Extensions.ToHex(account.Url.ToBytes())},
+					{"username", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Username, encryptionKey))},
+					{"password", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Password, encryptionKey))},
+				};
+				var result = XDocument.Parse(webClient.UploadValues("https://lastpass.com/show_website.php",
+					parameters).ToUtf8());
+			}
+			catch (WebException ex)
+			{
+				throw new FetchException(FetchException.FailureReason.WebException, "WebException occurred", ex);
+			}
+
+			//TODO GUARD-2190 Validate response
+			try
+			{
+				return new Blob(new byte[0],	//return new Blob( response.ToUtf8().Decode64(),
+						    session.KeyIterationCount,
+						    session.EncryptedPrivateKey );
+			}
+			catch ( FormatException ex )
+			{
+				throw new FetchException( FetchException.FailureReason.InvalidResponse, "Invalid base64 in response", ex );
+			}
+		}
+
+		internal static string AddApplication(Session session, byte[] encryptionKey, string accountName, string accountGroup)
+		{
+			using (var webClient = new WebClient())
+			{ 
+				return AddApplication(session, webClient, encryptionKey, accountName, accountGroup);
+			}
+		}
+
+		/// <summary>Add "application" in LastPass, with Application, Name, Notes and Fields</summary>
+		/// <returns>appaid returned by LastPass</returns>
+		private static string AddApplication(Session session, IWebClient webClient, byte[] encryptionKey, string accountName, string accountGroup)
+		{
+			XDocument response;
+			try
+			{
+				SetSessionCookies(webClient, session);				
+				var parameters = new NameValueCollection
+				{
+					{"extjs", "1"},
+					{"token", session.Token},
+					{"method", "cli"},
+					{"name", ParserHelper.Encode64(ParserHelper.EncryptAes256(accountName + "Name", encryptionKey))},
+					{"grouping", ParserHelper.Encode64(ParserHelper.EncryptAes256(accountGroup, encryptionKey))},
+					{"pwprotect", "off"},	//Require master password to view: "on" / "off",
+
+					{"ajax", "1"},
+					{"cmd", "updatelpaa"},
+					{"appname", accountName},
+				};
+				response = XDocument.Parse(webClient.UploadValues("https://lastpass.com/addapp.php",
+					parameters).ToUtf8());
+			}
+			catch (WebException ex)
+			{
+				throw new FetchException(FetchException.FailureReason.WebException, "WebException occurred", ex);
+			}
+
+			try
+			{
+				var appaid = response.Elements("xmlresponse").Elements("result").Attributes().First(a=>a.Name=="appaid").Value;
+				return appaid;
+			}
+			catch ( FormatException ex )
+			{
+				throw new FetchException( FetchException.FailureReason.InvalidResponse, "Invalid response", ex );
+			}
+		}
+
+
+		private static readonly Dictionary<Platform, string> PlatformToUserAgent = new Dictionary<Platform, string>
         {
             {Platform.Desktop, "cli"},
             {Platform.Mobile, "android"},
