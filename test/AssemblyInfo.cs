@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "SkuVault.LastPass.Test" )]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCopyright("Copyright © wtf 2013")]
 [assembly: AssemblyCompany( "SkuVault" )]
 [assembly: AssemblyProduct( "SkuVault.LastPass.Test" )]
-[assembly: AssemblyCopyright( "Copyright © SkuVault 2021" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

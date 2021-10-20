@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "SkuVault.LastPass" )]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCopyright("Copyright © wtf 2013")]
 [assembly: AssemblyCompany( "SkuVault" )]
 [assembly: AssemblyProduct( "SkuVault.LastPass" )]
-[assembly: AssemblyCopyright( "Copyright © SkuVault 2021" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
