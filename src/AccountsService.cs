@@ -38,7 +38,7 @@ namespace SkuVault.LastPass
 						{"extjs", "1"},
 						{"token", session.Token},
 						{"method", "cli"},
-						{"name", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Name, encryptionKey))},	//TODO-2190 Perhaps create an AccountWithEncrypted : Account
+						{"name", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Name, encryptionKey))},	//TODO GUARD-2194 Perhaps create an AccountWithEncrypted : Account
 																					//	and populate these in the constructor? Same for the 3 places below
 						{"grouping", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Group, encryptionKey))},
 						{"pwprotect", "off"},	//Require master password to view: "on" / "off",
