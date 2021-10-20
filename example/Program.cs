@@ -3,7 +3,6 @@
 
 using System;
 using System.IO;
-using SkuVault.LastPass;
 
 namespace SkuVault.LastPass.IntegrationTests
 {
@@ -13,66 +12,66 @@ namespace SkuVault.LastPass.IntegrationTests
 		// to Vault UI requests.
 		private class TextUi : Ui
 		{
-			public override string ProvideSecondFactorPassword( SecondFactorMethod method )
+			public override string ProvideSecondFactorPassword(SecondFactorMethod method)
 			{
-				return GetAnswer( string.Format( "Please enter {0} code", method ) );
+				return GetAnswer(string.Format("Please enter {0} code", method));
 			}
 
-			public override void AskToApproveOutOfBand( OutOfBandMethod method )
+			public override void AskToApproveOutOfBand(OutOfBandMethod method)
 			{
-				Console.WriteLine( "Please approve out-of-band via {0}", method );
+				Console.WriteLine("Please approve out-of-band via {0}", method);
 			}
 
-			private static string GetAnswer( string prompt )
+			private static string GetAnswer(string prompt)
 			{
-				Console.WriteLine( prompt );
-				Console.Write( "> " );
+				Console.WriteLine(prompt);
+				Console.Write("> ");
 				var input = Console.ReadLine();
 
 				return input == null ? "" : input.Trim();
 			}
 		}
 
-		static void Main( string[] args )
+		static void Main(string[] args)
 		{
 			try
 			{
 				VaultCredentials vaultCredentials = ReadCredentialsFromFile();
-				ClientInfo clientInfo = new ClientInfo( Platform.Desktop, vaultCredentials.Id, vaultCredentials.Description, false );
+				ClientInfo clientInfo = new ClientInfo(Platform.Desktop, vaultCredentials.Id, vaultCredentials.Description, false);
 				var vault = OpenVault(vaultCredentials, clientInfo);
 				DisplayAllAccounts(vault.Accounts);
-				//AddAccount(vaultCredentials, clientInfo);
+				AddAccount(vaultCredentials, clientInfo);
 				AddApplication(vaultCredentials, clientInfo);
 			}
-			catch ( LoginException e )
+			catch (LoginException e)
 			{
-				Console.WriteLine( "Something went wrong: {0}", e );
+				Console.WriteLine("Something went wrong: {0}", e);
 			}
 		}
 
-		private static void AddAccount( VaultCredentials vaultCredentials, ClientInfo clientInfo )
+		private static void AddAccount(VaultCredentials vaultCredentials, ClientInfo clientInfo)
 		{
 			string emptyId = string.Empty;
 			const string noGroup = "(none)";
-			var account = new Account( emptyId, "account " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), "bob", "pass", "www.yahoo.com", noGroup );
+			var account = new Account(emptyId, "account " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), "bob", "pass", "www.yahoo.com", noGroup);
 			AccountsService.CreateAccount(account, vaultCredentials, clientInfo, new TextUi());
 		}
 
-		private static void AddApplication( VaultCredentials vaultCredentials, ClientInfo clientInfo )
+		private static void AddApplication(VaultCredentials vaultCredentials, ClientInfo clientInfo)
 		{
 			const string noGroup = "(none)";
-			string applicationName = "application " + DateTime.UtcNow.ToString( "yyyy-MM-dd HH:mm:ss" );
-			string application = "name " + DateTime.UtcNow.ToString( "yyyy-MM-dd HH:mm:ss" );
+			string applicationName = "application " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+			string application = "name " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
 			AccountsService.CreateApplication(application, applicationName, noGroup, vaultCredentials, clientInfo, new TextUi());
 		}
 
-		private static void DisplayAllAccounts( Account[] accounts )
+		private static void DisplayAllAccounts(Account[] accounts)
 		{
 			// Dump all the accounts
-			for ( var i = 0; i < accounts.Length; ++i )
+			for (var i = 0; i < accounts.Length; ++i)
 			{
 				var account = accounts[i];
-				Console.WriteLine( "{0}:\n" +
+				Console.WriteLine("{0}:\n" +
 							"        id: {1}\n" +
 							"      name: {2}\n" +
 							"  username: {3}\n" +
@@ -85,7 +84,7 @@ namespace SkuVault.LastPass.IntegrationTests
 							account.Username,
 							account.Password,
 							account.Url,
-							account.Group );
+							account.Group);
 			}
 		}
 
@@ -98,17 +97,17 @@ namespace SkuVault.LastPass.IntegrationTests
 			//   - client ID
 			//   - client description
 			// See credentials.txt.example for an example.
-			var credentialsStr = File.ReadAllLines( "../../Files/credentials.txt" );
+			var credentialsStr = File.ReadAllLines("../../Files/credentials.txt");
 			return new VaultCredentials(userName: credentialsStr[0], password: credentialsStr[1],
 				id: credentialsStr[2], description: credentialsStr[3]);
 		}
 
 		private static Vault OpenVault(VaultCredentials vaultCredentials, ClientInfo clientInfo)
 		{
-			return Vault.Open( vaultCredentials.UserName,
+			return Vault.Open(vaultCredentials.UserName,
 						vaultCredentials.Password,
 						clientInfo,
-						new TextUi() );
+						new TextUi());
 		}
 	}
 }

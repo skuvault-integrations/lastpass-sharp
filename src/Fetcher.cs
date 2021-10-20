@@ -396,116 +396,10 @@ namespace SkuVault.LastPass
 			return new LoginException(LoginException.FailureReason.LastPassUnknown, "Unknown reason");
 		}
 
-		private static void SetSessionCookies(IWebClient webClient, Session session)
+		internal static void SetSessionCookies(IWebClient webClient, Session session)
 		{
 			webClient.Headers.Add("Cookie", string.Format("PHPSESSID={0}", Uri.EscapeDataString(session.Id)));
 		}
-
-		internal static Account AddAccount(Session session, byte[] encryptionKey, Account account)
-		{
-			using (var webClient = new WebClient())
-			{
-				var blobResult = AddAccount(session, webClient, encryptionKey, account);
-				//TODO GUARD-2190 Convert blobResult to account and then return
-				return account;
-			}
-		}
-
-		//TODO GUARD-2190 Failing now
-		private static Blob AddAccount(Session session, IWebClient webClient, byte[] encryptionKey, Account account)
-		{
-			byte[] response;
-			try
-			{
-				SetSessionCookies(webClient, session);
-				var parameters = new NameValueCollection
-				{
-					{"extjs", "1"},
-					{"token", session.Token},
-					{"method", "cli"},
-					{"name", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Name, encryptionKey))},	//TODO-2190 Perhaps create an AccountWithEncrypted : Account
-																				//	and populate these in the constructor? Same for the 3 places below
-					{"grouping", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Group, encryptionKey))},
-					{"pwprotect", "off"},	//Require master password to view: "on" / "off",
-
-					{"ajax", "1"},
-					{"cmd", "updatelpaa"},
-					{"appname", account.Name},
-					//{"appaid", account.Id},
-					//{"aid", account.Id},
-					{"url", Extensions.ToHex(account.Url.ToBytes())},
-					{"username", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Username, encryptionKey))},
-					{"password", ParserHelper.Encode64(ParserHelper.EncryptAes256(account.Password, encryptionKey))},
-				};
-				var result = XDocument.Parse(webClient.UploadValues("https://lastpass.com/show_website.php",
-					parameters).ToUtf8());
-			}
-			catch (WebException ex)
-			{
-				throw new FetchException(FetchException.FailureReason.WebException, "WebException occurred", ex);
-			}
-
-			//TODO GUARD-2190 Validate response
-			try
-			{
-				return new Blob(new byte[0],      //return new Blob(response.ToUtf8().Decode64(),
-						    session.KeyIterationCount,
-						    session.EncryptedPrivateKey);
-			}
-			catch (FormatException ex)
-			{
-				throw new FetchException(FetchException.FailureReason.InvalidResponse, "Invalid base64 in response", ex);
-			}
-		}
-
-		internal static string AddApplication(Session session, byte[] encryptionKey, string application, string applicationName, string group)
-		{
-			using (var webClient = new WebClient())
-			{
-				return AddApplication(session, webClient, encryptionKey, application, applicationName, group);
-			}
-		}
-
-		/// <summary>Add "application" in LastPass, with Application, Name, Notes and Fields</summary>
-		/// <returns>appaid returned by LastPass</returns>
-		//Based on lastpass_update_account in https://github.com/lastpass/lastpass-cli/blob/master/endpoints.c#L167
-		private static string AddApplication(Session session, IWebClient webClient, byte[] encryptionKey, string application, string applicationName, string group)
-		{
-			XDocument response;
-			try
-			{
-				SetSessionCookies(webClient, session);
-				var parameters = new NameValueCollection
-				{
-					{"extjs", "1"},
-					{"token", session.Token},
-					{"method", "cli"},
-					{"name", ParserHelper.Encode64(ParserHelper.EncryptAes256(applicationName, encryptionKey))},
-					{"grouping", ParserHelper.Encode64(ParserHelper.EncryptAes256(group, encryptionKey))},
-					{"pwprotect", "off"},	//Require master password to view: "on" / "off",
-					{"ajax", "1"},
-					{"cmd", "updatelpaa"},
-					{"appname", application},
-				};
-				response = XDocument.Parse(webClient.UploadValues("https://lastpass.com/addapp.php",
-					parameters).ToUtf8());
-			}
-			catch (WebException ex)
-			{
-				throw new FetchException(FetchException.FailureReason.WebException, "WebException occurred", ex);
-			}
-
-			try
-			{
-				var appaid = response.Elements("xmlresponse").Elements("result").Attributes().First(a => a.Name == "appaid").Value;
-				return appaid;
-			}
-			catch (FormatException ex)
-			{
-				throw new FetchException(FetchException.FailureReason.InvalidResponse, "Invalid response", ex);
-			}
-		}
-
 
 		private static readonly Dictionary<Platform, string> PlatformToUserAgent = new Dictionary<Platform, string>
 		{
@@ -514,18 +408,18 @@ namespace SkuVault.LastPass
 		};
 
 		private static readonly Dictionary<string, Ui.SecondFactorMethod> KnownOtpMethods =
-		    new Dictionary<string, Ui.SecondFactorMethod>
-		    {
-		    {"googleauthrequired", Ui.SecondFactorMethod.GoogleAuth},
-		    {"otprequired", Ui.SecondFactorMethod.Yubikey},
-		    };
+			new Dictionary<string, Ui.SecondFactorMethod>
+		{
+			{"googleauthrequired", Ui.SecondFactorMethod.GoogleAuth},
+			{"otprequired", Ui.SecondFactorMethod.Yubikey},
+		};
 
 		private static readonly Dictionary<string, Ui.OutOfBandMethod> KnownOobMethods =
-		    new Dictionary<string, Ui.OutOfBandMethod>
-		    {
-		    {"lastpassauth", Ui.OutOfBandMethod.LastPassAuth},
-		    {"toopher", Ui.OutOfBandMethod.Toopher},
-		    {"duo", Ui.OutOfBandMethod.Duo},
-		    };
+			new Dictionary<string, Ui.OutOfBandMethod>
+			{
+				{"lastpassauth", Ui.OutOfBandMethod.LastPassAuth},
+				{"toopher", Ui.OutOfBandMethod.Toopher},
+				{"duo", Ui.OutOfBandMethod.Duo},
+			};
 	}
 }

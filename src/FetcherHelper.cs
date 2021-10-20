@@ -2,43 +2,51 @@
 // Licensed under the terms of the MIT license. See LICENCE for details.
 
 using System;
+using System.IO;
 using System.Security.Cryptography;
+using System.Xml.Serialization;
 
 namespace SkuVault.LastPass
 {
-    static class FetcherHelper
-    {
-        public static byte[] MakeKey(string username, string password, int iterationCount)
-        {
-            if (iterationCount <= 0)
-                throw new ArgumentOutOfRangeException("iterationCount", "Iteration count should be positive");
+	static class FetcherHelper
+	{
+		public static byte[] MakeKey(string username, string password, int iterationCount)
+		{
+			if (iterationCount <= 0)
+				throw new ArgumentOutOfRangeException("iterationCount", "Iteration count should be positive");
 
-            if (iterationCount == 1)
-            {
-                using (var sha = new SHA256Managed())
-                {
-                    return sha.ComputeHash((username + password).ToBytes());
-                }
-            }
+			if (iterationCount == 1)
+			{
+				using (var sha = new SHA256Managed())
+				{
+					return sha.ComputeHash((username + password).ToBytes());
+				}
+			}
 
-            return Pbkdf2.Generate(password, username, iterationCount, 32);
-        }
+			return Pbkdf2.Generate(password, username, iterationCount, 32);
+		}
 
-        public static string MakeHash(string username, string password, int iterationCount)
-        {
-            if (iterationCount <= 0)
-                throw new ArgumentOutOfRangeException("iterationCount", "Iteration count should be positive");
+		public static string MakeHash(string username, string password, int iterationCount)
+		{
+			if (iterationCount <= 0)
+				throw new ArgumentOutOfRangeException("iterationCount", "Iteration count should be positive");
 
-            var key = MakeKey(username, password, iterationCount);
-            if (iterationCount == 1)
-            {
-                using (var sha = new SHA256Managed())
-                {
-                    return sha.ComputeHash((key.ToHex() + password).ToBytes()).ToHex();
-                }
-            }
+			var key = MakeKey(username, password, iterationCount);
+			if (iterationCount == 1)
+			{
+				using (var sha = new SHA256Managed())
+				{
+					return sha.ComputeHash((key.ToHex() + password).ToBytes()).ToHex();
+				}
+			}
 
-            return Pbkdf2.Generate(key, password, 1, 32).ToHex();
-        }
-    }
+			return Pbkdf2.Generate(key, password, 1, 32).ToHex();
+		}
+
+		public static T Deserialize<T>(this string xml)
+		{
+			var serializer = new XmlSerializer(typeof(T));
+			return ( T ) serializer.Deserialize( new StringReader( xml ) );
+		}
+	}
 }
