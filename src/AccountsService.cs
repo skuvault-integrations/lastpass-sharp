@@ -16,13 +16,16 @@
 			}
 		}
 
-		public static string CreateApplication(string accountName, string accountGroup, VaultCredentials vaultCredentials, ClientInfo clientInfo, Ui ui)
+		/// <summary>Will create an "application" entry in LastPass, with appication, name.
+		/// NOTE: Application can also have a list fields and a note. They're currently not saved</summary>
+		/// <returns>id of the created application</returns>
+		public static string CreateApplication(string application, string applicationName, string group, VaultCredentials vaultCredentials, ClientInfo clientInfo, Ui ui)
 		{
 			var session = Fetcher.Login(vaultCredentials.UserName, vaultCredentials.Password, clientInfo, ui);
 			try
 			{
 				var encryptionKey = Blob.MakeEncryptionKey(vaultCredentials.UserName, vaultCredentials.Password, session.KeyIterationCount);
-				return Fetcher.AddApplication(session, encryptionKey, accountName, accountGroup);
+				return Fetcher.AddApplication(session, encryptionKey, application, applicationName, group);
 			}
 			finally
 			{

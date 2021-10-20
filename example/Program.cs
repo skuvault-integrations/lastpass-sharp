@@ -54,15 +54,16 @@ namespace SkuVault.LastPass.IntegrationTests
 		{
 			string emptyId = string.Empty;
 			const string noGroup = "(none)";
-			var account = new Account( emptyId, "entry " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), "bob", "pass", "www.yahoo.com", noGroup );
+			var account = new Account( emptyId, "account " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), "bob", "pass", "www.yahoo.com", noGroup );
 			AccountsService.CreateAccount(account, vaultCredentials, clientInfo, new TextUi());
 		}
 
 		private static void AddApplication( VaultCredentials vaultCredentials, ClientInfo clientInfo )
 		{
 			const string noGroup = "(none)";
-			string accountName = "entry " + DateTime.UtcNow.ToString( "yyyy-MM-dd HH:mm:ss" );
-			AccountsService.CreateApplication(accountName, noGroup, vaultCredentials, clientInfo, new TextUi());
+			string applicationName = "application " + DateTime.UtcNow.ToString( "yyyy-MM-dd HH:mm:ss" );
+			string application = "name " + DateTime.UtcNow.ToString( "yyyy-MM-dd HH:mm:ss" );
+			AccountsService.CreateApplication(application, applicationName, noGroup, vaultCredentials, clientInfo, new TextUi());
 		}
 
 		private static void DisplayAllAccounts( Account[] accounts )
