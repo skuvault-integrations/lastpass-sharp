@@ -4,7 +4,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace LastPass
+namespace SkuVault.LastPass
 {
     static class Pbkdf2
     {

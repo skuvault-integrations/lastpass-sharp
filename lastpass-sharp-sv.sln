@@ -1,10 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastPass", "src\LastPass.csproj", "{A52C86A3-E29F-416B-AD55-50E0F8EF7831}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkuVault.LastPass", "src\SkuVault.LastPass.csproj", "{A52C86A3-E29F-416B-AD55-50E0F8EF7831}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastPass.Test", "test\LastPass.Test.csproj", "{1D0CC419-F25C-4F12-87D8-1DC825E15973}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkuVault.LastPass.Test", "test\SkuVault.LastPass.Test.csproj", "{1D0CC419-F25C-4F12-87D8-1DC825E15973}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D9C5F5F9-FC45-4F86-B62C-A6BD98448122}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D9C5F5
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "example\Example.csproj", "{AB9565EA-59BA-4569-9E7D-EA5C3EC525AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkuVault.LastPass.IntegrationTests", "example\SkuVault.LastPass.IntegrationTests.csproj", "{AB9565EA-59BA-4569-9E7D-EA5C3EC525AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,5 +57,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {21CC385B-B590-438A-9BA7-19EEF5CCA8A3}
 	EndGlobalSection
 EndGlobal

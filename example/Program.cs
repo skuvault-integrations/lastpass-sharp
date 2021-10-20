@@ -3,9 +3,9 @@
 
 using System;
 using System.IO;
-using LastPass;
+using SkuVault.LastPass;
 
-namespace Example
+namespace SkuVault.LastPass.IntegrationTests
 {
     class Program
     {
@@ -42,7 +42,7 @@ namespace Example
             //   - client ID
             //   - client description
             // See credentials.txt.example for an example.
-            var credentials = File.ReadAllLines("../../credentials.txt");
+            var credentials = File.ReadAllLines("../../Files/credentials.txt");
             var username = credentials[0];
             var password = credentials[1];
             var id = credentials[2];

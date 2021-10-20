@@ -3,7 +3,7 @@
 
 using System;
 
-namespace LastPass
+namespace SkuVault.LastPass
 {
     public class BaseException: Exception
     {

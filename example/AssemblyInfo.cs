@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Example")]
+[assembly: AssemblyTitle( "SkuVault.LastPass.IntegrationTests" )]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("wtf")]
-[assembly: AssemblyProduct("Example")]
 [assembly: AssemblyCopyright("Copyright © wtf 2013")]
+[assembly: AssemblyCompany( "SkuVault" )]
+[assembly: AssemblyProduct( "SkuVault.LastPass.IntegrationTests" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

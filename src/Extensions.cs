@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace LastPass
+namespace SkuVault.LastPass
 {
     static class Extensions
     {

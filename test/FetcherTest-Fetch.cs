@@ -6,7 +6,7 @@ using System.Net;
 using Moq;
 using NUnit.Framework;
 
-namespace LastPass.Test
+namespace SkuVault.LastPass.Test
 {
     [TestFixture]
     partial class FetcherTest
